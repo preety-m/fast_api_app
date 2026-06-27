@@ -1,5 +1,6 @@
-from sqlalchemy import Column, Integer, String,Enum,relationship
-from database import Base ,engine,SessionLocal
+from sqlalchemy import Column, Integer, String
+from sqlalchemy.orm import relationship
+from database import Base
 
 
 
@@ -9,6 +10,6 @@ class Company(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, unique=True, nullable=False, index=True)
     email = Column(String, unique=True)
-    phone_number = Column(String, unique=True)
-    address = Column(String, index=True)
-    jobs=relationship("Job",back_populates="company")
+    phone = Column(String, unique=True)
+
+    jobs = relationship("Job", back_populates="company")

@@ -1,37 +1,72 @@
-from fastapi import APIRouter
-from schema.company import CompanyCreate,CompanyUpdate
+from fastapi import APIRouter, HTTPException, Depends, status
+from schema.company import CompanyCreate, CompanyUpdate, CompanyResponse
+from models.company import Company
+from sqlalchemy.orm import Session
+from database import get_db
 
-router= APIRouter(prefix="/company",tags={"company"})
-companies=[]
+router = APIRouter(prefix="/company", tags=["company"])
 
-@router.post("/")
-def create_company(company:CompanyCreate):
-    companies.append(company)
-    return companies
-@router.get("/")
-def get_all_company():
-    return companies
-@router.get("/{company_id}")
-def get_company(company_id:int):
-    return companies[company_id]
 
-@router.put("/{company_id}")
-def update_company(company_id:int,company:CompanyUpdate):
-    companies[company_id]=company
-    return companies
+@router.post("/", status_code=status.HTTP_201_CREATED, response_model=CompanyResponse)
+def create_company(company: CompanyCreate, db: Session = Depends(get_db)):
+    new_company = Company(
+        name=company.name,
+        email=company.email,
+        phone=company.phone,
+    )
+
+    db.add(new_company)
+    db.commit()
+    db.refresh(new_company)
+
+    return new_company
+
+
+@router.get("/", response_model=list[CompanyResponse])
+def get_all_company(db: Session = Depends(get_db)):
+    return db.query(Company).all()
+
+
+@router.get("/{company_id}", response_model=CompanyResponse)
+def get_company(company_id: int, db: Session = Depends(get_db)):
+    db_company = db.query(Company).filter(Company.id == company_id).first()
+
+    if not db_company:
+        raise HTTPException(status_code=404, detail="Company not found")
+
+    return db_company
+
+
+@router.put("/{company_id}", response_model=CompanyResponse)
+def update_company(company_id: int, company: CompanyUpdate, db: Session = Depends(get_db)):
+    db_company = db.query(Company).filter(Company.id == company_id).first()
+
+    if not db_company:
+        raise HTTPException(status_code=404, detail="Company not found")
+
+    if company.name is not None:
+        db_company.name = company.name
+
+    if company.email is not None:
+        db_company.email = company.email
+
+    if company.phone is not None:
+        db_company.phone = company.phone
+
+    db.commit()
+    db.refresh(db_company)
+
+    return db_company
+
+
 @router.delete("/{company_id}")
-def delete_company(company_id:int):
-    companies.pop(company_id)
-    return companies
+def delete_company(company_id: int, db: Session = Depends(get_db)):
+    db_company = db.query(Company).filter(Company.id == company_id).first()
 
+    if not db_company:
+        raise HTTPException(status_code=404, detail="Company not found")
 
+    db.delete(db_company)
+    db.commit()
 
-
-# @router.get("/")
-# def read_company():
-#     return {"company":"Company root"}
-
-
-# @router.get("/{company_id}")
-# def read_company_by_id(company_id:int):
-#     return {"company_id":company_id}
+    return {"message": "Company deleted successfully"}
