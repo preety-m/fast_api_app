@@ -1,5 +1,6 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from typing import Optional
+
 
 class JobBase(BaseModel):
     title: str
@@ -7,19 +8,19 @@ class JobBase(BaseModel):
     description: Optional[str] = None
     company_id: int
 
+
 class JobCreate(JobBase):
     pass
 
-class JobUpdate(JobBase):
+
+class JobUpdate(BaseModel):
     title: Optional[str] = None
     salary: Optional[int] = None
     description: Optional[str] = None
     company_id: Optional[int] = None
 
+
 class JobResponse(JobBase):
     id: int
-    company_id: int
 
-    class Config:
-       from_attributes = True
-
+    model_config = ConfigDict(from_attributes=True)
