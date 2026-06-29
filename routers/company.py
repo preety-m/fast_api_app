@@ -9,11 +9,7 @@ router = APIRouter(prefix="/company", tags=["company"])
 
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model=CompanyResponse)
 def create_company(company: CompanyCreate, db: Session = Depends(get_db)):
-    new_company = Company(
-        name=company.name,
-        email=company.email,
-        phone=company.phone,
-    )
+    new_company = Company(**company.model_dump())
 
     db.add(new_company)
     db.commit()
@@ -52,6 +48,8 @@ def update_company(company_id: int, company: CompanyUpdate, db: Session = Depend
 
     if company.phone is not None:
         db_company.phone = company.phone
+    if company.location is not None:
+        db_company.location = company.location
 
     db.commit()
     db.refresh(db_company)
