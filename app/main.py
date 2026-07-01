@@ -1,30 +1,32 @@
+# pyrefly: ignore [missing-import]
 from fastapi import FastAPI
-from database import Base, engine
-
-# Import the model modules so SQLAlchemy registers BOTH models
-import models.company
-import models.job
-
-from routers import company, job
+from routers import job
+from routers import company
+from models import job as job_model, company as company_model
+from database import Base, engine, SessionLocal
+# pyrefly: ignore [missing-import]
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
-
-#Base.metadata.create_all(bind=engine)
-
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
+#Base.metadata.create_all(bind=job_model.engine)
 app.include_router(company.router)
-app.include_router(job.router)
-
-
+app.include_router(job.router
+                   )
 @app.get("/")
 def read_root():
-    return {"Hello": "world"}
-
+    return {"Hello": "World"}
 
 @app.get("/about")
 def read_about():
-    return {"about": "This is about page"}
-
+    return {"About": "This is a FastAPI application."}
 
 @app.get("/contact")
 def read_contact():
-    return {"contact": "preetydevim2004@gmail.com"}
+    return {"Contact": "preetydevim2004@gmail.com"} 
