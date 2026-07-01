@@ -1,8 +1,7 @@
 # pyrefly: ignore [missing-import]
 from fastapi import FastAPI
-from routers import job
-from routers import company
-from models import job as job_model, company as company_model
+from routers import job,auth,company
+from models import job as job_model, company as company_model,users as user_model
 from database import Base, engine, SessionLocal
 # pyrefly: ignore [missing-import]
 from fastapi.middleware.cors import CORSMiddleware
@@ -16,9 +15,9 @@ app.add_middleware(
     allow_headers=["*"]
 )
 #Base.metadata.create_all(bind=job_model.engine)
+app.include_router(auth.router)
 app.include_router(company.router)
-app.include_router(job.router
-                   )
+app.include_router(job.router)
 @app.get("/")
 def read_root():
     return {"Hello": "World"}
