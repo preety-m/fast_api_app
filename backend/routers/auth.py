@@ -4,7 +4,9 @@ from sqlalchemy.orm import Session
 from models.users import User
 from database import get_db
 from utils.security import hash_password, verify_password
-from schema.users import UserCreate, UserResponse
+from schema.token import Token
+from schema.users import UserCreate, UserResponse,LoginUser
+from utils.token import create_access_token
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 @router.post("/register", response_model=UserResponse)
@@ -19,8 +21,8 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
     db.refresh(db_user)
     return db_user
 
-@router.post("/login", response_model=UserResponse)
-def login(user: UserCreate, db: Session = Depends(get_db)):
+@router.post("/login", response_model=Token)
+def login(user:LoginUser, db: Session = Depends(get_db)):
     existing_user = db.query(User).filter(User.email == user.email).first()
 
     if not existing_user:
@@ -35,4 +37,5 @@ def login(user: UserCreate, db: Session = Depends(get_db)):
             detail="Incorrect password"
         )
 
-    return existing_user
+    access_token=create_access_token(data={"user_id":existing_user.id})
+    return {"access_token":access_token,"token_type":"bearer"}

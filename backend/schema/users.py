@@ -5,10 +5,12 @@ class UserBase(BaseModel):
     email: str
     role: str
 
-
 class UserCreate(UserBase):
     password: str
 
+class LoginUser(BaseModel):
+    email: str
+    password: str
 
 class UserResponse(UserBase):
     id: int
