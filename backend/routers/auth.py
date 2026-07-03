@@ -1,7 +1,8 @@
-# pyrefly: ignore [missing-import]
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from models.users import User
+from utils.oauth2 import get_current_user,role_required
 from database import get_db
 from utils.security import hash_password, verify_password
 from schema.token import Token

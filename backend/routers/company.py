@@ -1,3 +1,4 @@
+from utils.oauth2 import get_current_user,role_required
 from fastapi import APIRouter, HTTPException, Depends, status
 from schema.company import CompanyCreate, CompanyUpdate, CompanyResponse
 from models.company import Company
@@ -8,7 +9,11 @@ router = APIRouter(prefix="/company", tags=["company"])
 
 
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model=CompanyResponse)
-def create_company(company: CompanyCreate, db: Session = Depends(get_db)):
+def create_company(
+    company: CompanyCreate,
+    db: Session = Depends(get_db),
+    current_user=Depends(role_required(["admin"]))
+):
     new_company = Company(**company.model_dump())
 
     db.add(new_company)
@@ -19,12 +24,12 @@ def create_company(company: CompanyCreate, db: Session = Depends(get_db)):
 
 
 @router.get("/", response_model=list[CompanyResponse])
-def get_all_company(db: Session = Depends(get_db)):
+def get_all_company(db: Session = Depends(get_db),current_user=Depends(get_current_user)):
     return db.query(Company).all()
 
 
 @router.get("/{company_id}", response_model=CompanyResponse)
-def get_company(company_id: int, db: Session = Depends(get_db)):
+def get_company(company_id: int, db: Session = Depends(get_db),current_user=Depends(get_current_user)):
     db_company = db.query(Company).filter(Company.id == company_id).first()
 
     if not db_company:
