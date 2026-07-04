@@ -6,8 +6,9 @@ from utils.oauth2 import get_current_user,role_required
 from database import get_db
 from utils.security import hash_password, verify_password
 from schema.token import Token
-from schema.users import UserCreate, UserResponse,LoginUser
+from schema.users import UserCreate, UserResponse
 from utils.token import create_access_token
+from fastapi.security import OAuth2PasswordRequestForm
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 @router.post("/register", response_model=UserResponse)
@@ -23,8 +24,15 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
     return db_user
 
 @router.post("/login", response_model=Token)
-def login(user:LoginUser, db: Session = Depends(get_db)):
-    existing_user = db.query(User).filter(User.email == user.email).first()
+def login(
+    form_data: OAuth2PasswordRequestForm = Depends(),
+    db: Session = Depends(get_db)
+):
+    existing_user = (
+        db.query(User)
+        .filter(User.email == form_data.username)
+        .first()
+    )
 
     if not existing_user:
         raise HTTPException(
@@ -32,11 +40,20 @@ def login(user:LoginUser, db: Session = Depends(get_db)):
             detail="User not found"
         )
 
-    if not verify_password(user.password, existing_user.hashed_password):
+    if not verify_password(
+        form_data.password,
+        existing_user.hashed_password
+    ):
         raise HTTPException(
             status_code=401,
             detail="Incorrect password"
         )
 
-    access_token=create_access_token(data={"user_id":existing_user.id})
-    return {"access_token":access_token,"token_type":"bearer"}
+    access_token = create_access_token(
+        data={"user_id": existing_user.id}
+    )
+
+    return {
+        "access_token": access_token,
+        "token_type": "bearer"
+    }

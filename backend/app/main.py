@@ -1,11 +1,10 @@
 # pyrefly: ignore [missing-import]
 from fastapi import FastAPI
-from routers import job,auth,company
+from routers import job,auth,company,chat
 from models import job as job_model, company as company_model,users as user_model
 from database import Base, engine, SessionLocal
 # pyrefly: ignore [missing-import]
 from fastapi.middleware.cors import CORSMiddleware
-
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
@@ -18,6 +17,7 @@ app.add_middleware(
 app.include_router(auth.router)
 app.include_router(company.router)
 app.include_router(job.router)
+app.include_router(chat.router)
 @app.get("/")
 def read_root():
     return {"Hello": "World"}
