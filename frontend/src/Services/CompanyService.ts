@@ -1,4 +1,4 @@
-import api from "./api"; // Adjust the path if needed
+import api from "./api"; 
 import type { Company } from "../types/company";
 
 export async function getCompanies(): Promise<Company[]> {

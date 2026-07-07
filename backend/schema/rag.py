@@ -24,7 +24,7 @@ class JobMatchResult(BaseModel):
     title: str
     description: str
     salary: Optional[int] = None
-    match_score: float
+    score: float
 
 
 class JobMatchResponse(BaseModel):

@@ -24,9 +24,13 @@ def verify_access_token(token: str, db: Session):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
 
+        print("JWT Payload:", payload)
+
         current_user = db.query(User).filter(
             User.id == payload["user_id"]
         ).first()
+
+        print("User found:", current_user)
 
         if current_user is None:
             raise HTTPException(
@@ -37,12 +41,14 @@ def verify_access_token(token: str, db: Session):
         return current_user
 
     except ExpiredSignatureError:
+        print("Token expired")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Token has expired"
         )
 
-    except JWTError:
+    except JWTError as e:
+        print("JWT ERROR:", e)
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid token"

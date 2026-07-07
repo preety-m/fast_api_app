@@ -27,7 +27,7 @@ def rag_job_search(question:str) -> str:
     if not results:
         return "No jobs found in the database. Please embed jobs first using the /rag/embed-jobs endpoint."
     context = "\n".join([
-        f"-{r['title']}:{r['description']} (Salary:{r['salary']},March: {r['scpre']})"
+        f"-{r['title']}:{r['description']} (Salary:{r['salary']},Match: {r['score']})"
         for r in results
     ])
 

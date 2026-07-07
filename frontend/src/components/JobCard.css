@@ -1,0 +1,31 @@
+.job-company {
+  font-size: 1rem;
+  color: #cbd5e1;
+  margin-bottom: 12px;
+}
+
+.job-badges {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.job-pill {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 20px;
+}
+
+.location-pill {
+  background: rgba(59, 130, 246, 0.15); /* Soft Blue background */
+  color: #60a5fa; /* Vibrant blue text */
+  border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.salary-pill {
+  background: rgba(16, 185, 129, 0.15); /* Soft Green background */
+  color: #34d399; /* Vibrant green text */
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}

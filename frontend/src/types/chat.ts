@@ -1,5 +1,5 @@
 export interface ChatRequest {
-  query: string;
+  message: string;
   session_id: string;
 }
 

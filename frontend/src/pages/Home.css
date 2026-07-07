@@ -1,0 +1,144 @@
+.dashboard-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.dashboard-header-block h1 {
+  font-size: 2.2rem;
+  margin: 0 0 8px 0;
+  color: #f8fafc;
+}
+
+.greeting-text {
+  font-size: 1.25rem;
+  color: #94a3b8;
+  margin: 0;
+}
+
+.dashboard-search-form {
+  width: 100%;
+}
+
+.dashboard-search-input {
+  width: 100%;
+  background: rgba(30, 41, 59, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 14px 20px;
+  color: white;
+  font-size: 1.05rem;
+  outline: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.dashboard-search-input:focus {
+  border-color: #6366f1;
+  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.25);
+}
+
+.divider-line {
+  border: 0;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+  margin: 10px 0;
+}
+
+.quick-actions-section h2, 
+.section-header h2 {
+  font-size: 1.4rem;
+  color: #cbd5e1;
+  margin: 0 0 16px 0;
+}
+
+.actions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 16px;
+}
+
+.action-card-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.action-card {
+  background: rgba(30, 41, 59, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.action-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(99, 102, 241, 0.4);
+  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.25);
+  background: rgba(30, 41, 59, 0.6);
+}
+
+.action-icon {
+  font-size: 2rem;
+}
+
+.action-title {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #cbd5e1;
+  text-align: center;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.view-all-link {
+  color: #818cf8;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: color 0.2s;
+}
+
+.view-all-link:hover {
+  color: #6366f1;
+}
+
+.latest-jobs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.latest-job-row {
+  background: rgba(30, 41, 59, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.job-title-text {
+  font-weight: 600;
+  color: #f8fafc;
+}
+
+.job-company-text {
+  color: #94a3b8;
+  font-size: 0.95rem;
+}
