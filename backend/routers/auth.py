@@ -45,7 +45,7 @@ async def login(form_data:OAuth2PasswordRequestForm=Depends(),db:AsyncSession = 
         if not verify_password(form_data.password,existing_user.hashed_password):
             raise HTTPException(status_code=401,detail="Incorrect password")
         access_token=create_access_token(data={"sub":str(existing_user.id),"role":existing_user.role})
-        return {"access_token":access_token,"token_type":"Bearer"}
+        return {"access_token":access_token,"token_type":"bearer"}
     except HTTPException:
         raise
     except Exception as e:

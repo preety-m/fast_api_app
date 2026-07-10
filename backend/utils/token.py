@@ -5,7 +5,8 @@ from dotenv import load_dotenv
 import os
 from models.users import User
 from sqlalchemy.orm import Session
-
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 load_dotenv()
 
 SECRET_KEY = os.getenv("SECRET_KEY")
@@ -20,36 +21,35 @@ def create_access_token(data: dict, expires_delta: timedelta = timedelta(hours=2
     return encoded_jwt
 
 
-def verify_access_token(token: str, db: Session):
+async def verify_access_token(token: str, db: AsyncSession):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        user_id = int(payload["sub"])
 
-        print("JWT Payload:", payload)
+        result = await db.execute(
+            select(User).where(User.id == user_id)
+      )
+        
 
-        current_user = db.query(User).filter(
-            User.id == payload["user_id"]
-        ).first()
-
-        print("User found:", current_user)
+        current_user = result.scalars().first()
 
         if current_user is None:
             raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
+                status_code=401,
                 detail="Invalid credentials"
             )
 
         return current_user
 
     except ExpiredSignatureError:
-        print("Token expired")
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
+            status_code=401,
             detail="Token has expired"
         )
 
-    except JWTError as e:
-        print("JWT ERROR:", e)
+    except JWTError:
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
+            status_code=401,
             detail="Invalid token"
         )
+        
