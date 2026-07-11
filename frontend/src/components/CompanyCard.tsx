@@ -2,12 +2,9 @@ import { useState } from "react";
 import "./CompanyCard.css";
 
 import type { Company } from "../types/company";
-import type { Job } from "../types/job";
 
 type Props = {
   companies: Company[];
-  jobs: Job[];
-
   onAdd: (company: Company) => void;
   onEdit: (company: Company) => void;
   onDelete: (id: number) => void;
@@ -15,7 +12,6 @@ type Props = {
 
 function CompanyCard({
   companies,
-  jobs,
   onAdd,
   onEdit,
   onDelete,

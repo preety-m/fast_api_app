@@ -9,14 +9,10 @@ import {
   deleteCompany,
 } from "../Services/CompanyService";
 
-import { getJobs } from "../Services/JobService";
-
 import type { Company } from "../types/company";
-import type { Job } from "../types/job";
 
 function Companies() {
   const [companies, setCompanies] = useState<Company[]>([]);
-  const [jobs, setJobs] = useState<Job[]>([]);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -29,13 +25,9 @@ function Companies() {
     setLoading(true);
 
     try {
-      const [companyData, jobData] = await Promise.all([
-        getCompanies(),
-        getJobs(),
-      ]);
+      const companyData = await getCompanies();
 
       setCompanies(companyData);
-      setJobs(jobData);
     } catch (err) {
       setError("Failed to load companies");
       console.error(err);
@@ -90,17 +82,14 @@ function Companies() {
 
   return (
     <div className="page-container">
-
       <h1>Companies</h1>
 
       <CompanyCard
         companies={companies}
-        jobs={jobs}
         onAdd={handleAdd}
         onEdit={handleEdit}
         onDelete={handleDelete}
       />
-
     </div>
   );
 }
